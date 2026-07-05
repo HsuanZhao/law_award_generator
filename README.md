@@ -5,7 +5,7 @@
 一个纯娱乐性质的 HTML 单页应用，用于**自嘲式**生成虚构的法律荣誉证书和 3D 奖杯。  
 适合法律从业者、法学生或任何想体验“被加冕”乐趣的朋友——**请勿当真**。
 
-![示例截图](screenshot.png) <!-- 如果仓库有截图可替换，无则不填 -->
+<img width="1920" height="953" alt="a6252c9a-5435-4634-a314-3acc78d53330" src="https://github.com/user-attachments/assets/a8dd8cad-aa57-4686-991b-63198c12690a" />
 
 ---
 
