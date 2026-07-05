@@ -42,7 +42,8 @@
 
 ---
 
-## 📂 文件结构.
+## 📂 文件结构
+.
 ├── law_award_generator.html # 完整单页应用（含所有 CSS/JS）
 ├── README.md # 项目说明
 └── LICENSE # MIT 许可证
