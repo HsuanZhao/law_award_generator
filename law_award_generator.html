@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>法律荣耀认证中心</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{
+    --paper:#f3ead2;
+    --paper-dark:#e7d9ae;
+    --ink:#2b1b12;
+    --red:#7c1420;
+    --red-deep:#5a0e17;
+    --gold:#b8892b;
+    --gold-bright:#e3b957;
+    --gold-hi:#fbeec2;
+    --muted:#8a7a5c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 800px 500px at 15% -10%, rgba(227,185,87,.10), transparent 60%),
+      radial-gradient(ellipse 800px 500px at 85% 110%, rgba(227,185,87,.08), transparent 60%),
+      radial-gradient(circle at 20% 10%, #4a3110 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, #4a3110 0%, transparent 40%),
+      #241a10;
+    font-family:"Noto Sans SC", sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    padding:36px 16px 60px;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ---------- sparkle field ---------- */
+  .sparkle{
+    position:fixed;
+    border-radius:50%;
+    background:var(--gold-hi);
+    box-shadow:0 0 6px 1px rgba(251,238,194,.8);
+    pointer-events:none;
+    animation:twinkle 2.6s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.15;transform:scale(.7);}
+    50%{opacity:1;transform:scale(1.2);}
+  }
+
+  .frame-outer{
+    max-width:1040px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+    border:1px solid rgba(227,185,87,.35);
+    border-radius:6px;
+    padding:26px 22px 40px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), transparent 20%);
+    box-shadow:
+      inset 0 0 0 6px rgba(0,0,0,.15),
+      inset 0 0 40px rgba(227,185,87,.05);
+  }
+  .frame-outer::before,
+  .frame-outer::after{
+    content:"❦";
+    position:absolute;
+    color:var(--gold-bright);
+    font-size:20px;
+    opacity:.6;
+    top:8px;
+  }
+  .frame-outer::before{left:16px;}
+  .frame-outer::after{right:16px;transform:scaleX(-1);}
+
+  .eyebrow{
+    text-align:center;
+    color:var(--gold-bright);
+    letter-spacing:.35em;
+    font-size:12px;
+    margin-bottom:10px;
+    opacity:.9;
+  }
+
+  .title-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .laurel{opacity:.85;}
+  .laurel svg{display:block;height:46px;width:auto;}
+
+  h1.page-title{
+    text-align:center;
+    font-family:"Noto Serif SC", serif;
+    font-weight:900;
+    font-size:32px;
+    margin:0;
+    letter-spacing:.06em;
+    background:linear-gradient(100deg,#c99a3f 20%, #fdf1c8 40%, #c99a3f 60%, #fdf1c8 80%);
+    background-size:250% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation:shimmer 5s linear infinite;
+  }
+  @keyframes shimmer{
+    0%{background-position:0% 50%;}
+    100%{background-position:250% 50%;}
+  }
+
+  p.page-sub{
+    text-align:center;
+    color:#c9b98a;
+    font-size:13.5px;
+    margin:0 0 30px;
+    line-height:1.7;
+  }
+  .crown-spin{
+    display:inline-block;
+    animation:spin 4s linear infinite;
+  }
+  @keyframes spin{ to{transform:rotate(360deg);} }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-bottom:30px;
+  }
+  .controls input{
+    background:#2f2114;
+    border:1px solid #5c4526;
+    color:#f2e6c4;
+    padding:9px 14px;
+    border-radius:3px;
+    font-size:13px;
+    font-family:"Noto Sans SC",sans-serif;
+    width:150px;
+  }
+  .controls input::placeholder{color:#8a7550;}
+  .controls input:focus{outline:none;border-color:var(--gold-bright);box-shadow:0 0 0 2px rgba(227,185,87,.25);}
+
+  /* ---------- stage: trophy + certificate ---------- */
+  .stage{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    gap:30px;
+    align-items:start;
+  }
+  @media (max-width:820px){
+    .stage{grid-template-columns:1fr;}
+  }
+
+  .trophy-panel{
+    position:relative;
+    height:400px;
+    border-radius:8px;
+    background:
+      radial-gradient(ellipse at 50% 75%, rgba(227,185,87,.16), transparent 65%),
+      linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.25));
+    border:1px solid rgba(227,185,87,.3);
+    overflow:hidden;
+  }
+  .trophy-panel::after{
+    content:"";
+    position:absolute;
+    left:8%;right:8%;bottom:34px;
+    height:16px;
+    background:radial-gradient(ellipse, rgba(0,0,0,.55), transparent 70%);
+    filter:blur(2px);
+  }
+  #trophyCanvas{
+    width:100%;
+    height:100%;
+    display:block;
+    position:relative;
+    z-index:1;
+  }
+  .trophy-caption{
+    position:absolute;
+    bottom:8px;
+    left:0;right:0;
+    text-align:center;
+    font-size:10.5px;
+    letter-spacing:.15em;
+    color:var(--gold-bright);
+    opacity:.75;
+    z-index:2;
+  }
+
+  /* ---------- certificate book ---------- */
+  .cert-panel{
+    perspective:2400px;
+  }
+  .book{
+    position:relative;
+    transform-style:preserve-3d;
+    transform:rotateX(3deg) rotateY(-2deg);
+    filter:drop-shadow(0 40px 50px rgba(0,0,0,.55));
+  }
+  .page-slot{position:relative;}
+
+  .cert-outer{
+    position:relative;
+    background:var(--paper);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(184,137,43,0.035) 0px, rgba(184,137,43,0.035) 1px, transparent 1px, transparent 3px);
+    padding:10px;
+    border-radius:2px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.2);
+  }
+  .cert-border{
+    border:2px solid var(--gold);
+    padding:2px;
+    position:relative;
+  }
+  .cert-border::before{
+    content:"";
+    position:absolute;
+    inset:5px;
+    border:1px solid var(--gold);
+    pointer-events:none;
+    opacity:.6;
+  }
+  .cert-inner{
+    border:1px solid var(--gold);
+    padding:38px 34px 30px;
+    position:relative;
+    min-height:520px;
+    background:
+      radial-gradient(ellipse at top, rgba(184,137,43,0.1), transparent 60%);
+  }
+  .corner{
+    position:absolute;
+    width:30px;height:30px;
+    color:var(--gold);
+    font-size:20px;
+    line-height:1;
+  }
+  .corner.tl{top:2px;left:2px;}
+  .corner.tr{top:2px;right:2px;transform:scaleX(-1);}
+  .corner.bl{bottom:2px;left:2px;transform:scaleY(-1);}
+  .corner.br{bottom:2px;right:2px;transform:scale(-1,-1);}
+
+  .cert-org{
+    text-align:center;
+    font-size:11.5px;
+    letter-spacing:.25em;
+    color:var(--muted);
+    margin-bottom:4px;
+  }
+  .cert-org b{color:var(--red);}
+  .cert-hr{
+    height:2px;
+    margin:10px auto 22px;
+    width:80px;
+    background:var(--gold);
+    position:relative;
+  }
+  .cert-hr::before,.cert-hr::after{
+    content:"◆";
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--gold);
+    font-size:10px;
+  }
+  .cert-hr::before{left:-16px;}
+  .cert-hr::after{right:-16px;}
+
+  .cert-title-label{
+    text-align:center;
+    font-size:12px;
+    letter-spacing:.4em;
+    color:var(--red);
+    margin-bottom:10px;
+  }
+  .cert-award-name{
+    text-align:center;
+    font-family:"Noto Serif SC",serif;
+    font-weight:900;
+    font-size:26px;
+    line-height:1.5;
+    color:var(--red-deep);
+    margin:0 0 22px;
+    text-shadow:0 1px 0 rgba(255,255,255,.4);
+  }
+  .cert-body{
+    text-align:center;
+    font-size:14px;
+    line-height:2;
+    color:#3a2a18;
+    margin-bottom:18px;
+  }
+  .cert-body .name{
+    font-family:"Noto Serif SC",serif;
+    font-weight:700;
+    font-size:19px;
+    color:var(--red-deep);
+    padding:0 4px;
+    border-bottom:1px dashed var(--gold);
+  }
+  .cert-citation{
+    text-align:center;
+    font-size:13px;
+    color:#5a4426;
+    font-style:italic;
+    line-height:1.9;
+    margin:0 auto 22px;
+    max-width:480px;
+  }
+
+  .cert-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-top:20px;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .cert-footer .col{line-height:1.8;}
+  .cert-footer .col b{color:#3a2a18;display:block;font-size:12px;}
+
+  .seal{
+    position:absolute;
+    right:44px;
+    bottom:78px;
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    border:3px solid var(--red);
+    color:var(--red);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:"Noto Serif SC",serif;
+    font-weight:700;
+    font-size:11px;
+    line-height:1.4;
+    transform:rotate(-18deg) scale(1);
+    opacity:.88;
+    mix-blend-mode:multiply;
+    padding:8px;
+  }
+  .seal::before{
+    content:"";
+    position:absolute;
+    inset:6px;
+    border:1px solid var(--red);
+    border-radius:50%;
+  }
+  .seal.stamp{ animation:stampdown .45s ease-out; }
+  @keyframes stampdown{
+    0%{transform:rotate(-18deg) scale(2.4);opacity:0;}
+    60%{opacity:.95;}
+    100%{transform:rotate(-18deg) scale(1);opacity:.88;}
+  }
+
+  /* ---------- cover / opening animation ---------- */
+  .cover{
+    position:absolute;
+    inset:0;
+    transform-origin:left center;
+    transform:rotateY(0deg);
+    transition:transform 1.05s cubic-bezier(.5,.05,.15,1);
+    z-index:5;
+    backface-visibility:hidden;
+    border-radius:2px;
+    overflow:hidden;
+    box-shadow:6px 0 24px rgba(0,0,0,.4);
+  }
+  .cover.open{ transform:rotateY(-152deg); }
+  .cover-face{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(227,185,87,.22), transparent 55%),
+      repeating-conic-gradient(from 0deg, rgba(227,185,87,.05) 0deg 6deg, transparent 6deg 12deg),
+      linear-gradient(160deg,#5a0e17,#7c1420 45%,#5a0e17);
+    border:2px solid var(--gold-bright);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:20px;
+  }
+  .cover-face::before{
+    content:"";
+    position:absolute;
+    inset:10px;
+    border:1px solid rgba(227,185,87,.6);
+  }
+  .cover-emblem{
+    width:64px;height:64px;
+    border-radius:50%;
+    border:2px solid var(--gold-bright);
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;
+    color:var(--gold-hi);
+    background:radial-gradient(circle, rgba(227,185,87,.25), transparent 70%);
+  }
+  .cover-title{
+    font-family:"Noto Serif SC",serif;
+    font-weight:900;
+    font-size:24px;
+    color:var(--gold-hi);
+    letter-spacing:.3em;
+    text-shadow:0 2px 6px rgba(0,0,0,.4);
+  }
+  .cover-sub{
+    font-size:10px;
+    letter-spacing:.35em;
+    color:rgba(251,238,194,.75);
+  }
+  .wax-seal{
+    position:absolute;
+    bottom:22px;
+    right:26px;
+    width:46px;height:46px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #a8324a, #5a0e17 70%);
+    border:1px solid rgba(227,185,87,.6);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;
+    color:var(--gold-hi);
+    box-shadow:0 3px 8px rgba(0,0,0,.5);
+  }
+
+  .price-tag{
+    margin-top:20px;
+    background:#2f2114;
+    border:1px solid #5c4526;
+    border-radius:4px;
+    padding:14px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    position:relative;
+  }
+  .price-tag::before{
+    content:"🏅";
+    position:absolute;
+    top:-14px;left:16px;
+    font-size:20px;
+    animation:swing 2.4s ease-in-out infinite;
+    transform-origin:top center;
+  }
+  @keyframes swing{
+    0%,100%{transform:rotate(-8deg);}
+    50%{transform:rotate(8deg);}
+  }
+  .price-tag .label{
+    font-size:12px;
+    color:#c9b98a;
+    letter-spacing:.1em;
+  }
+  .price-tag .amount{
+    font-family:"Noto Serif SC",serif;
+    font-weight:900;
+    font-size:22px;
+    color:var(--gold-bright);
+  }
+  .price-tag .note{
+    font-size:11px;
+    color:#7a6a48;
+  }
+
+  .btnrow{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:26px;
+    flex-wrap:wrap;
+  }
+  button{
+    font-family:"Noto Serif SC",serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.08em;
+    padding:13px 30px;
+    border-radius:3px;
+    cursor:pointer;
+    border:1px solid var(--gold);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  button:active{transform:translateY(1px) scale(.98);}
+  #genBtn{
+    background:linear-gradient(180deg, #8f1a26, #6b0f1a);
+    color:#f6e6c8;
+    box-shadow:0 6px 0 #4a0a12, 0 10px 18px rgba(0,0,0,.4);
+  }
+  #genBtn:hover{box-shadow:0 6px 0 #4a0a12, 0 12px 22px rgba(0,0,0,.5);}
+  #shareBtn{
+    background:transparent;
+    color:var(--gold-bright);
+    box-shadow:none;
+  }
+  #shareBtn:hover{background:rgba(227,185,87,.08);}
+
+  .disclaimer{
+    text-align:center;
+    color:#6a5a3c;
+    font-size:10.5px;
+    line-height:1.9;
+    margin-top:28px;
+    letter-spacing:.02em;
+  }
+
+  #toast{
+    position:fixed;
+    left:50%;
+    bottom:26px;
+    transform:translate(-50%,20px);
+    background:#2f2114;
+    color:#f2e6c4;
+    border:1px solid var(--gold-bright);
+    padding:10px 20px;
+    border-radius:4px;
+    font-size:12.5px;
+    opacity:0;
+    transition:opacity .3s, transform .3s;
+    pointer-events:none;
+    z-index:1000;
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0);}
+
+  .confetti-piece{
+    position:fixed;
+    top:-12px;
+    width:8px;height:14px;
+    opacity:0.9;
+    pointer-events:none;
+    z-index:999;
+    border-radius:1px;
+  }
+  @keyframes confettiFall{
+    0%{transform:translateY(0) rotate(0deg);opacity:1;}
+    100%{transform:translateY(105vh) rotate(680deg);opacity:0;}
+  }
+
+  @media (max-width:480px){
+    .cert-inner{padding:26px 16px 24px;min-height:auto;}
+    .cert-award-name{font-size:20px;}
+    .seal{width:76px;height:76px;font-size:9.5px;right:20px;bottom:60px;}
+    .cert-footer{flex-direction:column;align-items:flex-start;gap:10px;}
+    .trophy-panel{height:260px;}
+    h1.page-title{font-size:24px;}
+    .laurel svg{height:32px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="frame-outer">
+  <div class="eyebrow">L E G A L &nbsp; H O N O R S &nbsp; B U R E A U</div>
+  <div class="title-row">
+    <span class="laurel">
+      <svg viewBox="0 0 60 100"><g fill="none" stroke="#e3b957" stroke-width="2">
+        <path d="M50 90 C20 80 8 50 20 10" />
+        <ellipse cx="24" cy="20" rx="9" ry="4" transform="rotate(30 24 20)"/>
+        <ellipse cx="18" cy="35" rx="9" ry="4" transform="rotate(15 18 35)"/>
+        <ellipse cx="15" cy="52" rx="9" ry="4" transform="rotate(0 15 52)"/>
+        <ellipse cx="18" cy="68" rx="9" ry="4" transform="rotate(-15 18 68)"/>
+        <ellipse cx="27" cy="82" rx="9" ry="4" transform="rotate(-30 27 82)"/>
+      </g></svg>
+    </span>
+    <h1 class="page-title"><span class="crown-spin">👑</span> 法律荣耀认证生成器</h1>
+    <span class="laurel" style="transform:scaleX(-1);">
+      <svg viewBox="0 0 60 100"><g fill="none" stroke="#e3b957" stroke-width="2">
+        <path d="M50 90 C20 80 8 50 20 10" />
+        <ellipse cx="24" cy="20" rx="9" ry="4" transform="rotate(30 24 20)"/>
+        <ellipse cx="18" cy="35" rx="9" ry="4" transform="rotate(15 18 35)"/>
+        <ellipse cx="15" cy="52" rx="9" ry="4" transform="rotate(0 15 52)"/>
+        <ellipse cx="18" cy="68" rx="9" ry="4" transform="rotate(-15 18 68)"/>
+        <ellipse cx="27" cy="82" rx="9" ry="4" transform="rotate(-30 27 82)"/>
+      </g></svg>
+    </span>
+  </div>
+  <p class="page-sub">一键颁发全球顶级法律荣誉 · 无需业绩 · 无需同行评审 · 只需转账<br>点击下方按钮，为自己或朋友隆重加冕</p>
+
+  <div class="controls">
+    <input id="nameInput" type="text" placeholder="受奖人姓名（默认：某某）" maxlength="12">
+    <input id="orgInput" type="text" placeholder="律所/机构名称（默认：某某律师事务所）" maxlength="20">
+  </div>
+
+  <div class="stage">
+    <div class="trophy-panel" id="trophyPanel">
+      <canvas id="trophyCanvas"></canvas>
+      <div class="trophy-caption">实体奖杯 · 随机形态生成</div>
+    </div>
+
+    <div class="cert-panel">
+      <div class="book" id="book">
+        <div class="page-slot">
+          <div class="cert-outer">
+            <div class="cert-border">
+              <div class="cert-inner" id="certInner">
+                <span class="corner tl">❧</span><span class="corner tr">❧</span>
+                <span class="corner bl">❧</span><span class="corner br">❧</span>
+
+                <div class="cert-org">主办单位：<b id="orgName">环球法律精英联合总会</b></div>
+                <div class="cert-hr"></div>
+                <div class="cert-title-label">荣　誉　证　书</div>
+                <div class="cert-award-name" id="awardName">年度商事诉讼卓越贡献大律师</div>
+
+                <div class="cert-body">
+                  兹证明 <span class="name" id="winnerName">某某</span> 律师<br>
+                  经<b id="orgName2">评审委员会</b>严格评选（缴费即过）<br>
+                  荣获本届 <span id="tierLabel">白金奖</span> 殊荣
+                </div>
+
+                <div class="cert-citation" id="citation">
+                  其专业能力、行业影响力与转账速度，均达到本次评选之全部标准。
+                </div>
+
+                <div class="cert-footer">
+                  <div class="col">
+                    证书编号：<b id="certNo">LHB-2026-000001</b><br>
+                    颁发日期：<b id="certDate">2026年07月05日</b>
+                  </div>
+                  <div class="col" style="text-align:right;">
+                    有效期：<b id="certValid">自颁发之日起永久有效</b><br>
+                    备注：<b>不获续费自动失效</b>
+                  </div>
+                </div>
+
+                <div class="seal" id="seal">环球法律<br>精英联合会<br>评审专用章</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cover" id="cover">
+          <div class="cover-face">
+            <div class="cover-emblem">⚖</div>
+            <div class="cover-title">荣誉证书</div>
+            <div class="cover-sub">C E R T I F I C A T E &nbsp; O F &nbsp; H O N O R</div>
+            <div class="wax-seal">封缄</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="price-tag">
+    <div>
+      <div class="label">本次颁奖服务报价</div>
+      <div class="amount" id="priceAmount">¥ 68,000</div>
+    </div>
+    <div class="note" id="priceNote">含证书快递 · 官网新闻稿一篇 · 不含税 · 可开发票（品目：会务费）</div>
+  </div>
+
+  <div class="btnrow">
+    <button id="genBtn">隆　重　颁　奖</button>
+    <button id="shareBtn">复制获奖感言</button>
+  </div>
+
+  <p class="disclaimer">
+    * 本证书及奖杯造型均由本页面随机生成，纯属虚构，如有雷同，那可能是真的。<br>
+    * 本工具不代表任何真实评选机构，亦不接受真实付款，仅用于自嘲与行业观察。
+  </p>
+</div>
+
+<div id="toast">已复制到剪贴板</div>
+
+<script>
+/* ============ sparkle background ============ */
+(function(){
+  const n = 45;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('div');
+    s.className='sparkle';
+    const size = Math.random()*2+1;
+    s.style.width=size+'px';
+    s.style.height=size+'px';
+    s.style.left = Math.random()*100+'vw';
+    s.style.top = Math.random()*100+'vh';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    s.style.animationDuration = (2+Math.random()*2.4)+'s';
+    document.body.appendChild(s);
+  }
+})();
+
+/* ============ data pools ============ */
+const orgNames = [
+  "环球法律精英联合总会","亚太商事法律卓越评鉴中心","国际律师荣誉认证局（未注册）",
+  "中华法律行业价值评估研究院","全球法商领袖联合会","东方法治文化促进总会",
+  "国际法律创新与影响力研究中心","跨境法律服务品质认证联盟","法律行业高质量发展促进会",
+  "世界青年律师杰出人物评选组委会","中国法律品牌建设研究会","国际法律精英俱乐部理事会"
+];
+const awardNames = [
+  "年度商事诉讼卓越贡献大律师","亚太地区最具影响力法律精英","全球顶尖跨境并购领军律师",
+  "中国核心竞争力律师TOP100","年度最受客户信赖法律顾问","杰出青年法律先锋人物",
+  "行业标杆·卓越法律服务奖","终身成就·法治建设贡献奖","年度最具商业价值律师品牌",
+  "国际化法律服务领跑者","法律科技融合创新先锋","客户口碑五星律师（内部评选）",
+  "年度最佳朋友圈曝光律师","知识产权保护杰出贡献人物","婚姻家事领域温情大律师",
+  "刑事辩护领域正义先锋","资本市场护航功勋律师"
+];
+const citations = [
+  "其专业能力、行业影响力与转账速度，均达到本次评选之全部标准。",
+  "经组委会审慎评估其朋友圈转发次数与好评截图，认定其资质卓越。",
+  "在客户见证信（本人代写）中屡获盛赞，堪称行业楷模。",
+  "其向组委会展现出的合作诚意与打款效率，令人印象深刻。",
+  "多年来持续赞助本会各类活动，专业精神有目共睹。",
+  "在提交材料的PDF字数与排版精美程度上，遥遥领先其他候选人。",
+  "对本届评选服务费缴纳之及时，充分体现其行业责任感。",
+  "其个人简介中形容词密度之高，令评委会深感震撼。"
+];
+const tiers = [
+  {label:"钻石奖", price:198000, note:"含证书快递 · 官网头条一篇 · 颁奖典礼VIP座位 · 不含税"},
+  {label:"白金奖", price:98000, note:"含证书快递 · 官网新闻稿一篇 · 不含税 · 可开发票（品目：会务费）"},
+  {label:"金奖", price:68000, note:"含证书快递 · 公众号软文一篇 · 不含税"},
+  {label:"银奖", price:38000, note:"含电子证书 · 不含快递 · 不含税"},
+  {label:"铜奖", price:19800, note:"仅含电子版证书PDF · 不含税 · 不退不换"},
+  {label:"入围荣誉奖", price:8800, note:"仅显示姓名于官网名单末尾 · 三年后自动下线"}
+];
+
+function rand(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function randRange(a,b){return a+Math.random()*(b-a);}
+function pad(n,len){return String(n).padStart(len,"0");}
+function randomDateThisYear(){
+  const m = Math.floor(Math.random()*12)+1;
+  const d = Math.floor(Math.random()*28)+1;
+  return `2026年${pad(m,2)}月${pad(d,2)}日`;
+}
+
+/* ============ certificate content update ============ */
+function updateCertificateContent(){
+  const name = document.getElementById('nameInput').value.trim() || "某某";
+  const orgInputVal = document.getElementById('orgInput').value.trim();
+
+  const org = rand(orgNames);
+  const award = rand(awardNames);
+  const citation = rand(citations);
+  const tier = rand(tiers);
+  const certNo = "LHB-2026-" + pad(Math.floor(Math.random()*999999),6);
+
+  document.getElementById('orgName').textContent = org;
+  document.getElementById('orgName2').textContent = org.length>8 ? "评审委员会" : org;
+  document.getElementById('awardName').textContent = award;
+  document.getElementById('winnerName').textContent = name;
+  document.getElementById('tierLabel').textContent = tier.label;
+  document.getElementById('citation').textContent = citation;
+  document.getElementById('certNo').textContent = certNo;
+  document.getElementById('certDate').textContent = randomDateThisYear();
+  document.getElementById('priceAmount').textContent = "¥ " + tier.price.toLocaleString();
+  document.getElementById('priceNote').textContent = tier.note;
+
+  const sealText = (orgInputVal || org).slice(0,6);
+  document.getElementById('seal').innerHTML = sealText + "<br>评审专用章<br>（仅供纪念）";
+
+  const seal = document.getElementById('seal');
+  seal.classList.remove('stamp');
+  void seal.offsetWidth;
+  seal.classList.add('stamp');
+}
+
+/* ============ book open/close animation ============ */
+function playCertAnimation(){
+  const cover = document.getElementById('cover');
+  cover.classList.remove('open');
+  void cover.offsetWidth;
+  setTimeout(()=>{
+    updateCertificateContent();
+    cover.classList.add('open');
+  }, 480);
+}
+
+/* ============ confetti ============ */
+function launchConfetti(){
+  const colors=['#e3b957','#7c1420','#f6e9c8','#b8892b','#8f1a26'];
+  for(let i=0;i<40;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.left = Math.random()*100+'vw';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animation = `confettiFall ${1.6+Math.random()*1.3}s ease-in forwards`;
+    el.style.animationDelay = (Math.random()*0.35)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 3400);
+  }
+}
+
+/* ============ toast ============ */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ============ 3D trophy (three.js) ============ */
+let scene, camera, renderer, trophyGroup;
+const metalPalettes = [
+  {color:0xd4af37, emissive:0x1a1200},
+  {color:0xd9a679, emissive:0x1a0f08},
+  {color:0xc9d0d6, emissive:0x0d1012},
+  {color:0xb87f2e, emissive:0x150c04}
+];
+
+function initTrophy(){
+  const panel = document.getElementById('trophyPanel');
+  const canvas = document.getElementById('trophyCanvas');
+  const w = panel.clientWidth, h = panel.clientHeight;
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(35, w/h, 0.1, 100);
+  renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setSize(w,h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+  scene.add(new THREE.AmbientLight(0xfff2d0, 0.6));
+  const key = new THREE.DirectionalLight(0xffe6a8, 1.15);
+  key.position.set(3,5,4);
+  scene.add(key);
+  const rim = new THREE.PointLight(0xff8a5c, 0.6, 20);
+  rim.position.set(-4,2,-3);
+  scene.add(rim);
+  const fill = new THREE.PointLight(0xfff6df, 0.5, 20);
+  fill.position.set(-2,-1,4);
+  scene.add(fill);
+
+  trophyGroup = new THREE.Group();
+  scene.add(trophyGroup);
+
+  buildTrophy();
+  window.addEventListener('resize', onResizeTrophy);
+  requestAnimationFrame(animateTrophy);
+}
+
+function onResizeTrophy(){
+  const panel = document.getElementById('trophyPanel');
+  const w = panel.clientWidth, h = panel.clientHeight;
+  if(w===0||h===0) return;
+  camera.aspect = w/h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w,h);
+}
+
+function animateTrophy(){
+  requestAnimationFrame(animateTrophy);
+  if(trophyGroup) trophyGroup.rotation.y += 0.008;
+  renderer.render(scene, camera);
+}
+
+function clearGroup(g){
+  while(g.children.length){
+    const c = g.children.pop();
+    if(c.geometry) c.geometry.dispose();
+    if(c.material) c.material.dispose();
+  }
+}
+
+function buildStarBurst(mat, r){
+  const group = new THREE.Group();
+  const spikeCount = 6;
+  for(let i=0;i<spikeCount;i++){
+    const ang = (i/spikeCount)*Math.PI*2;
+    const spike = new THREE.Mesh(new THREE.ConeGeometry(0.05,0.35,6), mat);
+    spike.position.set(Math.cos(ang)*r*0.4, 0.1, Math.sin(ang)*r*0.4);
+    spike.rotation.x = Math.PI/2 * Math.cos(ang);
+    spike.rotation.z = Math.PI/2 * Math.sin(ang);
+    group.add(spike);
+  }
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.06,0.4,8), mat);
+  tip.position.y = 0.2;
+  group.add(tip);
+  return group;
+}
+
+function buildTrophy(){
+  clearGroup(trophyGroup);
+  trophyGroup.position.set(0,0,0);
+  trophyGroup.rotation.set(0,trophyGroup.rotation.y,0);
+
+  const metal = rand(metalPalettes);
+  const mat = new THREE.MeshStandardMaterial({
+    color: metal.color, metalness:1, roughness: randRange(0.15,0.4),
+    emissive: metal.emissive, emissiveIntensity:0.15
+  });
+  const darkMat = new THREE.MeshStandardMaterial({color:0x241b12, metalness:0.3, roughness:0.65});
+
+  let y = 0;
+  const baseH1 = 0.28;
+  const base1 = new THREE.Mesh(new THREE.CylinderGeometry(1.35,1.5,baseH1,32), darkMat);
+  base1.position.y = baseH1/2;
+  trophyGroup.add(base1);
+  y += baseH1;
+
+  const baseH2 = 0.18;
+  const base2 = new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.15,baseH2,32), mat);
+  base2.position.y = y + baseH2/2;
+  trophyGroup.add(base2);
+  y += baseH2;
+
+  const stemH = randRange(0.6,1.1);
+  const stemTopR = randRange(0.12,0.22);
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(stemTopR, stemTopR*1.3, stemH, 24), mat);
+  stem.position.y = y + stemH/2;
+  trophyGroup.add(stem);
+  y += stemH;
+
+  const collarH = 0.12;
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(stemTopR*2.2, stemTopR*1.6, collarH,24), mat);
+  collar.position.y = y + collarH/2;
+  trophyGroup.add(collar);
+  y += collarH;
+
+  const segs = Math.random()<0.35 ? Math.floor(randRange(5,9)) : Math.floor(randRange(16,40));
+  const cupHeight = randRange(0.9,1.5);
+  const bottomR = stemTopR*2.2;
+  const bulgeR = randRange(0.6,1.2);
+  const bulgeHeightFrac = randRange(0.35,0.6);
+  const isClosedTop = Math.random()<0.4;
+  const topR = isClosedTop ? 0.02 : randRange(0.5, bulgeR*0.9);
+
+  const pts = [
+    new THREE.Vector2(bottomR, 0),
+    new THREE.Vector2(bottomR*1.1, cupHeight*0.08),
+    new THREE.Vector2(bulgeR, cupHeight*bulgeHeightFrac),
+    new THREE.Vector2(bulgeR*0.92, cupHeight*(bulgeHeightFrac+0.15)),
+    new THREE.Vector2(topR, cupHeight)
+  ];
+  if(!isClosedTop){ pts.push(new THREE.Vector2(topR*1.15, cupHeight+0.05)); }
+
+  const cupGeo = new THREE.LatheGeometry(pts, segs);
+  const cup = new THREE.Mesh(cupGeo, mat);
+  cup.position.y = y;
+  trophyGroup.add(cup);
+
+  if(!isClosedTop && Math.random()<0.6){
+    const handleGeo = new THREE.TorusGeometry(bulgeR*0.55, 0.05, 12, 24, Math.PI*1.2);
+    const h1 = new THREE.Mesh(handleGeo, mat);
+    h1.position.set(bulgeR*0.85, y+cupHeight*bulgeHeightFrac, 0);
+    h1.rotation.y = Math.PI/2;
+    trophyGroup.add(h1);
+    const h2 = h1.clone();
+    h2.position.x = -bulgeR*0.85;
+    h2.rotation.y = -Math.PI/2;
+    trophyGroup.add(h2);
+  }
+
+  let topY = y + cupHeight;
+  if(isClosedTop){
+    const ballR = topR*1.6+0.05;
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(ballR, 16,16), mat);
+    ball.position.y = topY + 0.05;
+    trophyGroup.add(ball);
+    topY += 0.1;
+    if(Math.random()<0.5){
+      const star = buildStarBurst(mat, ballR);
+      star.position.y = topY;
+      trophyGroup.add(star);
+    }
+  } else if(Math.random()<0.5){
+    const spikeCount = Math.floor(randRange(3,6));
+    for(let i=0;i<spikeCount;i++){
+      const ang = (i/spikeCount)*Math.PI*2;
+      const spike = new THREE.Mesh(new THREE.ConeGeometry(0.06,0.3,8), mat);
+      spike.position.set(Math.cos(ang)*topR*0.7, topY+0.15, Math.sin(ang)*topR*0.7);
+      trophyGroup.add(spike);
+    }
+  }
+
+  const box = new THREE.Box3().setFromObject(trophyGroup);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+  camera.position.set(0, center.y, size.y*1.6+2.4);
+  camera.lookAt(0, center.y, 0);
+}
+
+/* ============ wire up ============ */
+document.getElementById('genBtn').addEventListener('click', ()=>{
+  buildTrophy();
+  playCertAnimation();
+  launchConfetti();
+});
+
+document.getElementById('shareBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('winnerName').textContent;
+  const award = document.getElementById('awardName').textContent;
+  const org = document.getElementById('orgName').textContent;
+  const tier = document.getElementById('tierLabel').textContent;
+  const text = `非常荣幸，本人${name}荣获「${org}」颁发的「${award}」（${tier}），感谢组委会的认可（和我自己的转账），未来将继续为行业"发展"贡献力量。#律师 #荣誉 #行业观察`;
+  navigator.clipboard.writeText(text).then(()=>showToast("获奖感言已复制，欢迎发朋友圈")).catch(()=>showToast("复制失败，请手动选择文字"));
+});
+
+/* ============ init ============ */
+updateCertificateContent();
+initTrophy();
+setTimeout(()=>{
+  document.getElementById('cover').classList.add('open');
+}, 700);
+</script>
+</body>
+</html>
